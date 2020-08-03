@@ -2529,7 +2529,8 @@ function webViewerKeyDown(evt) {
     if (cmd === 1 || cmd === 8) {
       switch (evt.keyCode) {
         case 83: // s
-          PDFViewerApplication.download();
+          // 追加変更 ダウンロード可否にかかわらずショートカットでのダウンロードは禁止
+          // PDFViewerApplication.download();
           handled = true;
           break;
       }
