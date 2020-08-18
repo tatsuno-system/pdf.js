@@ -41,7 +41,7 @@ function download(blobUrl, filename) {
 
   // TOPに表示することでアプリに渡したり、ファイルとして保存したり、印刷できる
   const isIOS = navigator.userAgent.match(/(iPhone|iPad|iPod)/);
-  const isIPasOS = navigator.userAgent.toLowerCase().indexOf('macintosh') > -1 && 'ontouchend' in document;
+  const isIPadOS = navigator.userAgent.toLowerCase().indexOf('macintosh') > -1 && 'ontouchend' in document;
   if (isIOS || isIPadOS) {
     const isIOS12 = navigator.userAgent.match(/iPhone OS 12/);
     if (isIOS12) {
