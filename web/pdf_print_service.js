@@ -244,6 +244,37 @@ class PDFPrintService {
 
 const print = window.print;
 window.print = function () {
+
+  // 追加変更
+  // iOS,iPadOS,Androidで印刷した場合、別ウィンドウで開いて印刷
+  const isSPOS = navigator.userAgent.match(/(iPhone|iPad|iPod|Android)/);
+  const isIPadOS =
+    navigator.userAgent.toLowerCase().indexOf("macintosh") > -1 &&
+    "ontouchend" in document;
+  if (isSPOS || isIPadOS) {
+    let confirmationMessage;
+
+    // Android と iPhoneでメッセージを切り替える
+    if (navigator.userAgent.match(/(Android)/)) {
+
+      // confirmationMessage = window.l10n.get('message_for_print_android', null, 'Click OK and download the PDF, then print it.');
+      confirmationMessage = window.navigator.language === 'ja' ? 'OKを押すとダウンロード画面になりますので、ダウンロードしたPDFを表示し印刷機能をお使いください。' : 'Click OK and download the PDF, then print it.';
+    } else {
+      // confirmationMessage = window.l10n.get('message_for_print_iphone', null, 'Click OK to open the PDF in another frame, then print it.');
+      confirmationMessage = window.navigator.language === 'ja' ? '別ウィンドウで開いて印刷しますか？\n\nOKを押すとPDFを全画面表示しますので、ブラウザの印刷機能を使って印刷してください。' : 'Click OK to open the PDF in another frame, then print it.';
+    }
+    if (confirm(confirmationMessage)) {
+      const a = document.createElement("a");
+      a.target = "_top";
+      a.href = window.location.search.split("?file=")[1];
+      a.referrerpolicy = "unsafe-url";
+      (document.body || document.documentElement).appendChild(a);
+      a.click();
+      a.parentNode.removeChild(a);
+    }
+    return;
+  }
+
   if (activeService) {
     console.warn("Ignored window.print() because of a pending print job.");
     return;
@@ -316,26 +347,26 @@ function renderProgress(index, total) {
   progressPerc.setAttribute("data-l10n-args", JSON.stringify({ progress }));
 }
 
-window.addEventListener(
-  "keydown",
-  function (event) {
-    // Intercept Cmd/Ctrl + P in all browsers.
-    // Also intercept Cmd/Ctrl + Shift + P in Chrome and Opera
-    if (
-      event.keyCode === /* P= */ 80 &&
-      (event.ctrlKey || event.metaKey) &&
-      !event.altKey &&
-      (!event.shiftKey || window.chrome || window.opera)
-    ) {
-      window.print();
+// 追加変更 印刷禁止の制御
+// window.addEventListener(
+//   "keydown",
+//   function (event) {
+//     // Intercept Cmd/Ctrl + P in all browsers.
+//     // Also intercept Cmd/Ctrl + Shift + P in Chrome and Opera
+//     if (
+//       event.keyCode === /* P= */ 80 &&
+//       (event.ctrlKey || event.metaKey) &&
+//       !event.altKey &&
+//       (!event.shiftKey || window.chrome || window.opera)
+//     ) {
+//       window.print();
 
-      event.preventDefault();
-      event.stopImmediatePropagation();
-    }
-  },
-  true
-);
-
+//       event.preventDefault();
+//       event.stopImmediatePropagation();
+//     }
+//   },
+//   true
+// );
 if ("onbeforeprint" in window) {
   // Do not propagate before/afterprint events when they are not triggered
   // from within this polyfill. (FF / Chrome 63+).

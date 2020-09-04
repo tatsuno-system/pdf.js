@@ -44,6 +44,21 @@ See https://github.com/adobe-type-tools/cmap-resources
     <link rel="stylesheet" href="viewer.css">
 <!--#endif-->
 
+    <style>
+      #message_for_print {
+        display:none;
+      }
+      @media print {
+        .pdfViewer{
+          display:none;
+        }
+        #message_for_print{
+          display:block;
+          font-size:30px;
+        }
+      }
+    </style>
+
 <!--#if MOZCENTRAL-->
 <!--<script src="resource://pdf.js/web/viewer.mjs" type="module"></script>-->
 <!--#elif !MOZCENTRAL-->
@@ -92,10 +107,25 @@ See https://github.com/adobe-type-tools/cmap-resources
       }
     </script>
     <script src="viewer.js" type="module"></script>
+
+    <script>
+      window.addEventListener('keydown', function (e) {
+        const key = e.keyCode;
+
+        // BackSpace 無効化
+        if (key === 8) {
+          return false
+        }
+      })
+    </script>
+
 <!--#endif-->
   </head>
 
-  <body tabindex="0">
+  <body tabindex="1" class="loadingInProgress">
+    <!-- 追加変更 -->
+    <div id="message_for_print"></div>
+
     <div id="outerContainer">
 
       <div id="sidebarContainer">
@@ -340,7 +370,7 @@ See https://github.com/adobe-type-tools/cmap-resources
                   <div id="secondaryToolbar" class="hidden doorHangerRight menu">
                     <div id="secondaryToolbarButtonContainer" class="menuContainer">
 <!--#if GENERIC-->
-                      <button id="secondaryOpenFile" class="toolbarButton labeled" type="button" title="Open File" tabindex="0" data-l10n-id="pdfjs-open-file-button">
+                      <button id="secondaryOpenFile" class="toolbarButton labeled" type="button" title="Open File" tabindex="0" data-l10n-id="pdfjs-open-file-button" style="display: none">
                         <span data-l10n-id="pdfjs-open-file-button-label">Open</span>
                       </button>
 <!--#endif-->
@@ -350,7 +380,7 @@ See https://github.com/adobe-type-tools/cmap-resources
                           <span data-l10n-id="pdfjs-print-button-label">Print</span>
                         </button>
 
-                        <button id="secondaryDownload" class="toolbarButton labeled" type="button" title="Save" tabindex="0" data-l10n-id="pdfjs-save-button">
+                        <button id="secondaryDownload" class="toolbarButton labeled" type="button" title="Save" tabindex="0" data-l10n-id="pdfjs-save-button" style="display: none">
                           <span data-l10n-id="pdfjs-save-button-label">Save</span>
                         </button>
 

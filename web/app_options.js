@@ -36,7 +36,8 @@ if (typeof PDFJSDev === "undefined" || PDFJSDev.test("GENERIC")) {
   // Support: Android, iOS
   (function () {
     if (isIOS || isAndroid) {
-      compatParams.set("maxCanvasPixels", 5242880);
+      /** LMS追加変更 - https://github.com/tatsuno-system/pdfgen/issues/102 (iOS、Android端末での最大解像度をさらに落とす) */
+      compatParams.set("maxCanvasPixels", 5242880 / 2);
     }
   })();
 
