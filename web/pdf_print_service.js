@@ -218,6 +218,31 @@ PDFPrintService.prototype = {
 
 const print = window.print;
 window.print = function () {
+
+  // 追加変更
+  //iOS,iPadOS,Androidで印刷した場合、別ウィンドウで開いて印刷
+  const isSPOS = navigator.userAgent.match(/(iPhone|iPad|iPod|Android)/);
+  const isIPadOS = navigator.userAgent.toLowerCase().indexOf('macintosh') > -1 && 'ontouchend' in document;
+  if (isSPOS || isIPadOS) {
+    let confirmationMessage;
+
+    // Android と iPhoneでメッセージを切り替える
+    if (navigator.userAgent.match(/(Android)/)) {
+      confirmationMessage = window.l10n.get('message_for_print_android', null, 'Click OK and download the PDF, then print it.');
+    } else {
+      confirmationMessage = window.l10n.get('message_for_print_iphone', null, 'Click OK to open the PDF in another frame, then print it.');
+    }
+    if (confirm(confirmationMessage)) {
+      const a = document.createElement('a');
+      a.target = '_top';
+      a.href = window.location.search.split("?file=")[1];
+      (document.body || document.documentElement).appendChild(a);
+      a.click();
+      a.parentNode.removeChild(a);
+    }
+    return;
+  }
+
   if (activeService) {
     console.warn("Ignored window.print() because of a pending print job.");
     return;
@@ -286,32 +311,32 @@ function renderProgress(index, total, l10n) {
   });
 }
 
-window.addEventListener(
-  "keydown",
-  function (event) {
-    // Intercept Cmd/Ctrl + P in all browsers.
-    // Also intercept Cmd/Ctrl + Shift + P in Chrome and Opera
-    if (
-      event.keyCode === /* P= */ 80 &&
-      (event.ctrlKey || event.metaKey) &&
-      !event.altKey &&
-      (!event.shiftKey || window.chrome || window.opera)
-    ) {
-      window.print();
+// 追加変更 印刷禁止の制御
+// window.addEventListener(
+//   "keydown",
+//   function (event) {
+//     // Intercept Cmd/Ctrl + P in all browsers.
+//     // Also intercept Cmd/Ctrl + Shift + P in Chrome and Opera
+//     if (
+//       event.keyCode === /* P= */ 80 &&
+//       (event.ctrlKey || event.metaKey) &&
+//       !event.altKey &&
+//       (!event.shiftKey || window.chrome || window.opera)
+//     ) {
+//       window.print();
 
-      // The (browser) print dialog cannot be prevented from being shown in
-      // IE11.
-      event.preventDefault();
-      if (event.stopImmediatePropagation) {
-        event.stopImmediatePropagation();
-      } else {
-        event.stopPropagation();
-      }
-    }
-  },
-  true
-);
-
+//       // The (browser) print dialog cannot be prevented from being shown in
+//       // IE11.
+//       event.preventDefault();
+//       if (event.stopImmediatePropagation) {
+//         event.stopImmediatePropagation();
+//       } else {
+//         event.stopPropagation();
+//       }
+//     }
+//   },
+//   true
+// );
 if ("onbeforeprint" in window) {
   // Do not propagate before/afterprint events when they are not triggered
   // from within this polyfill. (FF /IE / Chrome 63+).
