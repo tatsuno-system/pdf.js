@@ -43,6 +43,23 @@ See https://github.com/adobe-type-tools/cmap-resources
 <!--<link rel="stylesheet" href="resource://pdf.js/web/viewer.css">-->
 <!--#else-->
     <link rel="stylesheet" href="viewer.css">
+
+    <!-- 追加変更 -->
+    <style>
+      #message_for_print {
+        display:none;
+      }
+      @media print {
+        .pdfViewer{
+          display:none;
+        }
+        #message_for_print{
+          display:block;
+          font-size:30px;
+        }
+      }
+    </style>
+
 <!--#endif-->
 
 <!--#if MOZCENTRAL-->
@@ -81,10 +98,26 @@ See https://github.com/adobe-type-tools/cmap-resources
     </script>
 
     <script src="viewer.js" type="module-shim"></script>
+
+    <!-- 追加変更 -->
+    <script>
+      window.addEventListener('keydown', function (e) {
+        const key = e.keyCode;
+
+        // BackSpace 無効化
+        if (key === 8) {
+          return false
+        }
+      })
+    </script>
+
 <!--#endif-->
   </head>
 
-  <body tabindex="1">
+  <body tabindex="1" class="loadingInProgress">
+    <!-- 追加変更 -->
+    <div id="message_for_print"></div>
+
     <div id="outerContainer">
 
       <div id="sidebarContainer">
@@ -205,7 +238,7 @@ See https://github.com/adobe-type-tools/cmap-resources
               <span data-l10n-id="print_label">Print</span>
             </button>
 
-            <button id="secondaryDownload" class="secondaryToolbarButton visibleMediumView" title="Save" tabindex="53" data-l10n-id="save">
+            <button id="secondaryDownload" class="secondaryToolbarButton visibleMediumView" title="Save" tabindex="53" data-l10n-id="save" style="display: none">
               <span data-l10n-id="save_label">Save</span>
             </button>
 
@@ -316,7 +349,7 @@ See https://github.com/adobe-type-tools/cmap-resources
               </div>
               <div id="toolbarViewerRight">
 <!--#if GENERIC-->
-                <button id="openFile" class="toolbarButton hiddenLargeView" title="Open File" tabindex="31" data-l10n-id="open_file">
+                <button id="openFile" class="toolbarButton hiddenLargeView" title="Open File" tabindex="31" data-l10n-id="open_file" style="display: none">
                   <span data-l10n-id="open_file_label">Open</span>
                 </button>
 <!--#endif-->
