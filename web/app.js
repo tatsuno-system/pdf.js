@@ -2733,7 +2733,7 @@ function webViewerTouchStart(evt) {
     // touchmove events to drive it. Or if we want to settle for a less good
     // experience we can make the touchmove events drive the existing step-zoom
     // behaviour that the ctrl+mousewheel path takes.
-    evt.preventDefault();
+    // evt.preventDefault(); /** LMS追加変更: タッチデバイスでのピンチイン・ピンチアウトを許可する */
   }
 }
 
@@ -2845,7 +2845,9 @@ function webViewerKeyDown(evt) {
     if (cmd === 1 || cmd === 8) {
       switch (evt.keyCode) {
         case 83: // s
-          eventBus.dispatch("download", { source: window });
+
+          // 追加変更 ダウンロード可否にかかわらずショートカットでのダウンロードは禁止
+          // eventBus.dispatch("download", { source: window });
           handled = true;
           break;
 
