@@ -43,7 +43,16 @@ import { PDFPageView } from "./pdf_page_view.js";
 import { SimpleLinkService } from "./pdf_link_service.js";
 import { TextLayerBuilder } from "./text_layer_builder.js";
 
-const DEFAULT_CACHE_SIZE = 10;
+/** LMS追加変更 - https://github.com/tatsuno-system/pdfgen/issues/102 */
+const userAgent = navigator.userAgent || "";
+const platform = navigator.platform || "";
+const maxTouchPoints = navigator.maxTouchPoints || 1;
+const isIOS =
+  /\b(iPad|iPhone|iPod)(?=;)/.test(userAgent) ||
+  (platform === "MacIntel" && maxTouchPoints > 1);
+
+const DEFAULT_CACHE_SIZE = isIOS ? 5 : 10;
+/** LMS追加変更 - ここまで */
 
 /**
  * @typedef {Object} PDFViewerOptions
