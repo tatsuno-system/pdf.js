@@ -43,23 +43,6 @@ See https://github.com/adobe-type-tools/cmap-resources
 <!--<link rel="stylesheet" href="resource://pdf.js/web/viewer.css">-->
 <!--#else-->
     <link rel="stylesheet" href="viewer.css">
-
-    <!-- 追加変更 -->
-    <style>
-      #message_for_print {
-        display:none;
-      }
-      @media print {
-        .pdfViewer{
-          display:none;
-        }
-        #message_for_print{
-          display:block;
-          font-size:30px;
-        }
-      }
-    </style>
-
 <!--#endif-->
 
 <!--#if MOZCENTRAL-->
@@ -98,19 +81,6 @@ See https://github.com/adobe-type-tools/cmap-resources
     </script>
 
     <script src="viewer.js" type="module-shim"></script>
-
-    <!-- 追加変更 -->
-    <script>
-      window.addEventListener('keydown', function (e) {
-        const key = e.keyCode;
-
-        // BackSpace 無効化
-        if (key === 8) {
-          return false
-        }
-      })
-    </script>
-
 <!--#endif-->
   </head>
 
