@@ -38,13 +38,6 @@ function download(blobUrl, filename) {
   const isIOS = navigator.userAgent.match(/(iPhone|iPad|iPod)/);
   const isIPadOS = navigator.userAgent.toLowerCase().indexOf('macintosh') > -1 && 'ontouchend' in document;
   if (isIOS || isIPadOS) {
-    const isIOS12 = navigator.userAgent.match(/iPhone OS 12/);
-    if (isIOS12) {
-      const f = location.href.split("file=")[1];
-      location.href = '/pdf/web/download.php?file=' + f + '&filename=' + filename;
-      return;
-    }
-
     a.target = '_top';
   } else {
       a.target = '_parent';
